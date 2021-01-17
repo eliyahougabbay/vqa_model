@@ -21,7 +21,7 @@ import torchvision.transforms as transforms
 
 from PIL import Image
 
-from tqdm.notebook import tqdm
+# from tqdm.notebook import tqdm
 
 import matplotlib.pyplot as plt
 
@@ -85,14 +85,14 @@ class VQADataset(Dataset):
 from torch.utils.data import DataLoader
 
 
-# Précisez la localisation de vos données sur Google Drive
+# Data path on google Drive
 path = "/content/drive/MyDrive/Harispu-Sama"
 image_folder = "boolean_answers_dataset_images_200"
 descriptor = "boolean_answers_dataset_200.csv"
 
 batch_size = 5
 
-# exemples de transformations
+# Image transformer
 transform = transforms.Compose(
     [transforms.Resize((299, 299)),
     transforms.ToTensor(),     
@@ -197,9 +197,6 @@ def train_optim(model, epochs, log_frequency, device, learning_rate=1e-4):
 
   model.to(device) # we make sure the model is on the proper device
 
-  # Multiclass classification setting, we use cross-entropy
-  # note that this implementation requires the logits as input 
-  # logits: values prior softmax transformation 
   loss_fn = torch.nn.BCELoss(reduction='mean')
 
   optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -210,7 +207,6 @@ def train_optim(model, epochs, log_frequency, device, learning_rate=1e-4):
 
       model.train() # we specify that we are training the model
 
-      # At each epoch, the training set will be processed as a set of batches
       for batch_id, batch in enumerate(vqa_dataloader_train) : 
         
           images, questions, answers = batch
@@ -262,4 +258,4 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 model = VQA_model(Text_model(), Image_model())
 
-train_optim(model, epochs=100, log_frequency=10, device=device, learning_rate=0.005)
+train_optim(model, epochs=100, log_frequency=10, device=device, learning_rate=5e-4)
